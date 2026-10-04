@@ -1,0 +1,15 @@
+.env
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+var/
+node_modules/
+apps/web/dist/
+.DS_Store
+*.egg-info/
+.claude/
+
+# live Tripo recordings (signed download URLs, large GLBs)
+tests/fixtures/tripo/recorded/

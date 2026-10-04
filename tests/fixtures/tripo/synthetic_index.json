@@ -1,0 +1,14 @@
+{
+  "tafoni": {
+    "model": "synthetic_tafoni.glb",
+    "synthetic": true
+  },
+  "bark": {
+    "model": "synthetic_bark.glb",
+    "synthetic": true
+  },
+  "karren": {
+    "model": "synthetic_karren.glb",
+    "synthetic": true
+  }
+}

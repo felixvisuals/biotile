@@ -1,0 +1,23 @@
+# Netlify hosts the static frontend. Everything under /api is proxied to the FastAPI backend
+# (Python geometry + Tripo calls with the secret key), which runs elsewhere, e.g. the Dockerfile
+# on Render, Fly.io, Railway or a small VPS. Replace the placeholder host below.
+# The proxy keeps the session cookie first-party and the Tripo key never reaches Netlify.
+[build]
+  base = "apps/web"
+  command = "npm ci && npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "22"
+
+[[redirects]]
+  from = "/api/*"
+  to = "https://YOUR-BACKEND-HOST/api/:splat"
+  status = 200
+  force = true
+
+# single-page app: every other path serves index.html
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

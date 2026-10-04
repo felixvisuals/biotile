@@ -1,0 +1,300 @@
+@import "@fontsource-variable/geist";
+@import "@fontsource-variable/geist-mono";
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Colour tokens: light (default) and dark. Quiet, paper-like, one natural accent. */
+:root {
+  --bg: #f5f5f0;
+  --fg: #222222;
+  --surface: #efefe9;
+  --line: rgb(34 34 34 / 0.1);
+  --accent: #4f7a32; /* moss: only for "alive" / ok states */
+  --warn: #b7791f;
+  --bad: #c2412d;
+  --pad: 16px;
+  color-scheme: light;
+}
+:root.dark {
+  --bg: #111111;
+  --fg: #cccccc;
+  --surface: #1a1a1a;
+  --line: rgb(204 204 204 / 0.1);
+  --accent: #8fbf6a;
+  --warn: #e0b04f;
+  --bad: #e5735f;
+  color-scheme: dark;
+}
+@media (min-width: 480px) { :root { --pad: 32px; } }
+@media (min-width: 720px) { :root { --pad: 40px; } }
+
+@theme {
+  --font-sans: "Geist Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Geist Mono Variable", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --color-bg: var(--bg);
+  --color-fg: var(--fg);
+  --color-surface: var(--surface);
+  --color-line: var(--line);
+  --color-accent: var(--accent);
+  --color-warn: var(--warn);
+  --color-bad: var(--bad);
+  /* type scale (Book of Shapes) */
+  --text-xs: 11px;
+  --text-xs--line-height: 1.4;
+  --text-sm: 13px;
+  --text-sm--line-height: 1.5;
+  --text-base: 18px;
+  --text-base--line-height: 1.5;
+  --text-md: 24px;
+  --text-md--line-height: 1.2;
+  --text-lg: 44px;
+  --text-lg--line-height: 1.1;
+  --text-xl: 64px;
+  --text-xl--line-height: 1;
+  --text-2xl: 96px;
+  --text-2xl--line-height: 0.95;
+}
+
+/* Module grid: one "col" is a twelfth of the content width (max 1400px). */
+:root {
+  --col: calc((min(100vw, 1400px) - 2 * var(--pad)) / 12);
+}
+@utility wrap {
+  width: 100%;
+  max-width: 1400px;
+  margin-inline: auto;
+  padding-inline: var(--pad);
+}
+@utility py-col { padding-block: var(--col); }
+@utility pt-col { padding-top: var(--col); }
+@utility pb-col { padding-bottom: var(--col); }
+@utility mt-col { margin-top: var(--col); }
+@utility gap-col4 { gap: calc(var(--col) / 4); }
+
+html,
+body {
+  background: var(--bg);
+  color: var(--fg);
+}
+body {
+  font-family: var(--font-sans);
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+::selection {
+  background: var(--fg);
+  color: var(--bg);
+}
+
+@layer components {
+  .title-xl {
+    @apply text-[56px] font-semibold tracking-[-0.05em] md:text-xl xl:text-2xl;
+  }
+  .title-lg {
+    @apply text-[36px] font-semibold tracking-[-0.04em] md:text-lg;
+  }
+  .title-md {
+    @apply text-md font-semibold tracking-[-0.025em];
+  }
+  .eyebrow {
+    @apply text-xs font-medium uppercase tracking-[0.12em] opacity-50;
+  }
+  .lead {
+    @apply text-base font-medium text-pretty;
+  }
+  .muted {
+    @apply opacity-50;
+  }
+
+  /* Pills: filters, tags and choice groups */
+  .pill {
+    @apply inline-flex h-7 cursor-pointer items-center gap-1 rounded-full border border-fg/30 px-5 text-xs font-bold uppercase tracking-widest opacity-50 transition-opacity select-none hover:opacity-80;
+  }
+  .pill[aria-pressed="true"],
+  .pill-solid {
+    @apply border-fg bg-fg text-bg opacity-100;
+  }
+
+  /* Buttons */
+  .btn {
+    @apply inline-flex h-11 cursor-pointer items-center justify-center gap-2 rounded-full bg-fg px-6 text-sm font-medium text-bg transition-opacity select-none hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-30;
+  }
+  .btn-ghost {
+    @apply inline-flex h-11 cursor-pointer items-center justify-center gap-2 rounded-full border border-fg/30 px-6 text-sm font-medium transition-colors select-none hover:border-fg disabled:cursor-not-allowed disabled:opacity-30;
+  }
+  .icon-btn {
+    @apply inline-flex size-9 cursor-pointer items-center justify-center rounded-full transition-opacity hover:opacity-60 disabled:opacity-30;
+  }
+
+  /* Form fields: underline only */
+  .field {
+    @apply block w-full border-0 border-b border-fg/20 bg-transparent px-0 py-2 text-base font-medium outline-none transition-colors placeholder:text-fg/30 focus:border-fg;
+  }
+  select.field {
+    @apply cursor-pointer appearance-none bg-[length:12px] bg-[right_center] bg-no-repeat pr-6;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M2 4l4 4 4-4' fill='none' stroke='%23888' stroke-width='1.5'/%3E%3C/svg%3E");
+  }
+  .label {
+    @apply mb-1 block text-sm font-medium tracking-wide;
+  }
+
+  /* Row link: "Make a poster →" */
+  .row-link {
+    @apply flex items-center justify-between gap-4 border-t border-line pt-3 opacity-80 transition-opacity hover:opacity-100;
+  }
+}
+
+/* Range slider, exactly like Book of Shapes: 2px track, hollow 14px thumb */
+.range {
+  appearance: none;
+  touch-action: none;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  background: transparent;
+  cursor: pointer;
+  position: relative;
+}
+.range::-webkit-slider-runnable-track {
+  height: 2px;
+  background: transparent;
+  border: none;
+}
+.range::-moz-range-track {
+  height: 2px;
+  background: transparent;
+}
+.range::-webkit-slider-thumb {
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  margin-top: -6px;
+  border-radius: 50%;
+  border: 2px solid var(--fg);
+  background: var(--bg);
+  transition: transform 0.1s;
+}
+.range::-moz-range-thumb {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 2px solid var(--fg);
+  background: var(--bg);
+}
+.range:hover::-webkit-slider-thumb {
+  transform: scale(1.15);
+}
+.range:focus-visible {
+  outline: none;
+}
+.range:focus-visible::-webkit-slider-thumb {
+  box-shadow: 0 0 0 4px var(--line);
+}
+
+/* Rotating circular text (theodore.net) */
+@keyframes spin-slow {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.spin-slow {
+  animation: spin-slow 22s linear infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .spin-slow {
+    animation: none;
+  }
+}
+
+/* Lenis */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+/* Map (MapLibre + OpenFreeMap positron): monochrome, inverted in dark mode */
+.tile-map .maplibregl-canvas {
+  filter: grayscale(1) contrast(1.02);
+}
+:root.dark .tile-map .maplibregl-canvas {
+  filter: grayscale(1) invert(0.92) contrast(0.9);
+}
+.tile-marker {
+  width: 14px;
+  height: 14px;
+  border-radius: 9999px;
+  background: var(--fg);
+  border: 2px solid var(--bg);
+  box-shadow: 0 0 0 1px var(--fg);
+  cursor: pointer;
+  transition: transform 0.15s;
+}
+.tile-marker:hover {
+  transform: scale(1.3);
+}
+.tile-popup .maplibregl-popup-content {
+  background: var(--bg);
+  color: var(--fg);
+  border-radius: 14px;
+  padding: 10px;
+  box-shadow: 0 6px 24px rgb(0 0 0 / 0.12);
+  font-family: var(--font-sans);
+}
+.tile-popup .maplibregl-popup-tip {
+  display: none;
+}
+.tile-popup-link {
+  display: grid;
+  gap: 2px;
+  width: 150px;
+}
+.tile-popup-link img {
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: contain;
+  margin-bottom: 6px;
+}
+.tile-popup-code {
+  font-family: var(--font-mono);
+  font-size: 11px;
+}
+.tile-popup-title {
+  font-size: 13px;
+  font-weight: 500;
+}
+.tile-popup-place {
+  font-size: 11px;
+  opacity: 0.6;
+}
+.maplibregl-ctrl-attrib {
+  font-size: 10px;
+}
+
+/* Typewriter caret */
+.type-caret {
+  display: inline-block;
+  width: 0.5em;
+  height: 1em;
+  margin-left: 0.08em;
+  vertical-align: -0.12em;
+  background: currentColor;
+  animation: caret-blink 1s steps(1) infinite;
+}
+@keyframes caret-blink {
+  50% {
+    opacity: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .type-caret {
+    animation: none;
+  }
+}

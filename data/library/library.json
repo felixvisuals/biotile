@@ -1,0 +1,397 @@
+{
+  "version": 1,
+  "note": "Prompt templates are for the text mode (v1). mock_fixture selects the synthetic Tripo stand-in until real recordings exist. Example images must carry a licence before they are added.",
+  "surfaces": [
+    {
+      "id": "bark",
+      "name": {
+        "en": "Tree bark",
+        "de": "Baumrinde"
+      },
+      "rationale": {
+        "en": "Deep cracks running top to bottom.",
+        "de": "Tiefe Risse von oben nach unten."
+      },
+      "prompt_template": "square flat stone slab, top-down orthographic view, deeply furrowed old oak bark with vertical fissures, strong relief, even diffuse lighting",
+      "negative_prompt": "statue, sphere, character, text, logo, smooth, glossy",
+      "recommended_functional_template": "moss_nests",
+      "recommended_bands": {
+        "macro_depth_mm": 15.0,
+        "meso_depth_mm": 4.0
+      },
+      "mock_fixture": "bark",
+      "example_images": [],
+      "kind": "sample"
+    },
+    {
+      "id": "weathered_rock",
+      "name": {
+        "en": "Weathered rock",
+        "de": "Verwitterter Fels"
+      },
+      "rationale": {
+        "en": "Cracks, pores and small dips.",
+        "de": "Spalten, Poren und kleine Mulden."
+      },
+      "prompt_template": "square flat stone slab, top-down orthographic view, weathered granite boulder surface with crevices and shallow pits, strong relief, even diffuse lighting",
+      "negative_prompt": "statue, sphere, character, text, logo, smooth, glossy",
+      "recommended_functional_template": "moss_nests",
+      "recommended_bands": {
+        "macro_depth_mm": 15.0,
+        "meso_depth_mm": 4.0
+      },
+      "mock_fixture": "tafoni",
+      "example_images": [],
+      "kind": "sample"
+    },
+    {
+      "id": "dry_cracked_loam",
+      "name": {
+        "en": "Cracks in dried mud",
+        "de": "Trockenrisse im Lehm"
+      },
+      "rationale": {
+        "en": "A net of cracks, like dried mud.",
+        "de": "Ein Netz aus Rissen, wie getrockneter Schlamm."
+      },
+      "prompt_template": "square flat stone slab, top-down orthographic view, dried cracked clay mud with polygonal crack network, strong relief, even diffuse lighting",
+      "negative_prompt": "statue, sphere, character, text, logo, smooth, glossy",
+      "recommended_functional_template": "none",
+      "recommended_bands": {
+        "macro_depth_mm": 15.0,
+        "meso_depth_mm": 4.0
+      },
+      "mock_fixture": "tafoni",
+      "example_images": [],
+      "kind": "sample"
+    },
+    {
+      "id": "deadwood",
+      "name": {
+        "en": "Deadwood",
+        "de": "Totholz"
+      },
+      "rationale": {
+        "en": "Old wood with tunnels and soft holes.",
+        "de": "Altes Holz mit Gängen und weichen Löchern."
+      },
+      "prompt_template": "square flat stone slab, top-down orthographic view, decaying deadwood with beetle galleries and soft cavities, strong relief, even diffuse lighting",
+      "negative_prompt": "statue, sphere, character, text, logo, smooth, glossy",
+      "recommended_functional_template": "moss_nests",
+      "recommended_bands": {
+        "macro_depth_mm": 15.0,
+        "meso_depth_mm": 4.0
+      },
+      "mock_fixture": "bark",
+      "example_images": [],
+      "kind": "sample"
+    },
+    {
+      "id": "slate",
+      "name": {
+        "en": "Slate",
+        "de": "Schiefer"
+      },
+      "rationale": {
+        "en": "Thin, parallel slits.",
+        "de": "Schmale, parallele Spalten."
+      },
+      "prompt_template": "square flat stone slab, top-down orthographic view, layered slate rock face with narrow parallel splits, strong relief, even diffuse lighting",
+      "negative_prompt": "statue, sphere, character, text, logo, smooth, glossy",
+      "recommended_functional_template": "moss_nests",
+      "recommended_bands": {
+        "macro_depth_mm": 15.0,
+        "meso_depth_mm": 4.0
+      },
+      "mock_fixture": "karren",
+      "example_images": [],
+      "kind": "sample"
+    },
+    {
+      "id": "sandstone",
+      "name": {
+        "en": "Sandstone",
+        "de": "Sandstein"
+      },
+      "rationale": {
+        "en": "Rough and porous.",
+        "de": "Rau und porös."
+      },
+      "prompt_template": "square flat stone slab, top-down orthographic view, rough porous sandstone surface, strong relief, even diffuse lighting",
+      "negative_prompt": "statue, sphere, character, text, logo, smooth, glossy",
+      "recommended_functional_template": "moss_nests",
+      "recommended_bands": {
+        "macro_depth_mm": 15.0,
+        "meso_depth_mm": 4.0
+      },
+      "mock_fixture": "tafoni",
+      "example_images": [],
+      "kind": "sample"
+    },
+    {
+      "id": "lava_rock",
+      "name": {
+        "en": "Lava rock",
+        "de": "Lavagestein"
+      },
+      "rationale": {
+        "en": "Full of round holes of all sizes.",
+        "de": "Voller runder Löcher in allen Größen."
+      },
+      "prompt_template": "square flat stone slab, top-down orthographic view, vesicular basalt lava rock with many round pores, strong relief, even diffuse lighting",
+      "negative_prompt": "statue, sphere, character, text, logo, smooth, glossy",
+      "recommended_functional_template": "moss_nests",
+      "recommended_bands": {
+        "macro_depth_mm": 15.0,
+        "meso_depth_mm": 4.0
+      },
+      "mock_fixture": "tafoni",
+      "example_images": [],
+      "kind": "sample"
+    },
+    {
+      "id": "root_surface",
+      "name": {
+        "en": "Tree root surface",
+        "de": "Wurzeloberfläche"
+      },
+      "rationale": {
+        "en": "Long grooves and small overhangs.",
+        "de": "Lange Rillen und kleine Überhänge."
+      },
+      "prompt_template": "square flat stone slab, top-down orthographic view, exposed tree root surface with long grooves, strong relief, even diffuse lighting",
+      "negative_prompt": "statue, sphere, character, text, logo, smooth, glossy",
+      "recommended_functional_template": "moss_nests",
+      "recommended_bands": {
+        "macro_depth_mm": 15.0,
+        "meso_depth_mm": 4.0
+      },
+      "mock_fixture": "bark",
+      "example_images": [],
+      "kind": "sample"
+    },
+    {
+      "id": "tafoni",
+      "name": {
+        "en": "Honeycomb weathering in sandstone",
+        "de": "Wabenverwitterung im Sandstein"
+      },
+      "rationale": {
+        "en": "Honeycomb hollows in sandstone that shade themselves.",
+        "de": "Wabenartige Mulden im Sandstein, die sich selbst beschatten."
+      },
+      "prompt_template": "square flat stone slab, top-down orthographic view, deeply weathered sandstone with honeycomb tafoni cavities, strong relief, even diffuse lighting",
+      "negative_prompt": "statue, sphere, character, text, logo, smooth, glossy",
+      "recommended_functional_template": "moss_nests",
+      "recommended_bands": {
+        "macro_depth_mm": 15.0,
+        "meso_depth_mm": 4.0
+      },
+      "mock_fixture": "tafoni",
+      "example_images": [],
+      "kind": "sample"
+    },
+    {
+      "id": "karren",
+      "name": {
+        "en": "Rain grooves in limestone",
+        "de": "Regenrillen im Kalkstein"
+      },
+      "rationale": {
+        "en": "Grooves carved by rain into limestone, all running downhill.",
+        "de": "Vom Regen in Kalkstein gegrabene Rinnen, alle bergab."
+      },
+      "prompt_template": "square flat stone slab, top-down orthographic view, limestone karren with parallel solution flutes running downhill, strong relief, even diffuse lighting",
+      "negative_prompt": "statue, sphere, character, text, logo, smooth, glossy",
+      "recommended_functional_template": "none",
+      "recommended_bands": {
+        "macro_depth_mm": 15.0,
+        "meso_depth_mm": 4.0
+      },
+      "mock_fixture": "karren",
+      "example_images": [],
+      "kind": "sample"
+    },
+    {
+      "id": "travertine",
+      "name": {
+        "en": "Calcareous tufa (travertine)",
+        "de": "Kalktuff (Travertin)"
+      },
+      "rationale": {
+        "en": "Very porous stone that holds water.",
+        "de": "Sehr poröser Stein, der Wasser hält."
+      },
+      "prompt_template": "square flat stone slab, top-down orthographic view, porous travertine tufa stone with irregular holes, strong relief, even diffuse lighting",
+      "negative_prompt": "statue, sphere, character, text, logo, smooth, glossy",
+      "recommended_functional_template": "moss_nests",
+      "recommended_bands": {
+        "macro_depth_mm": 15.0,
+        "meso_depth_mm": 4.0
+      },
+      "mock_fixture": "tafoni",
+      "example_images": [],
+      "kind": "sample"
+    },
+    {
+      "id": "plane_bark",
+      "name": {
+        "en": "Plane tree bark",
+        "de": "Platanenrinde"
+      },
+      "rationale": {
+        "en": "Peeling plates with gaps between them.",
+        "de": "Abblätternde Platten mit Lücken dazwischen."
+      },
+      "prompt_template": "square flat stone slab, top-down orthographic view, peeling plane tree bark with flaking plates, strong relief, even diffuse lighting",
+      "negative_prompt": "statue, sphere, character, text, logo, smooth, glossy",
+      "recommended_functional_template": "moss_nests",
+      "recommended_bands": {
+        "macro_depth_mm": 15.0,
+        "meso_depth_mm": 4.0
+      },
+      "mock_fixture": "bark",
+      "example_images": [],
+      "kind": "sample"
+    },
+    {
+      "id": "vine_bark",
+      "name": {
+        "en": "Old grapevine bark",
+        "de": "Alte Rebstockrinde"
+      },
+      "rationale": {
+        "en": "Long, stringy fibres.",
+        "de": "Lange, faserige Streifen."
+      },
+      "prompt_template": "square flat stone slab, top-down orthographic view, old grapevine trunk bark with fibrous long strips, strong relief, even diffuse lighting",
+      "negative_prompt": "statue, sphere, character, text, logo, smooth, glossy",
+      "recommended_functional_template": "moss_nests",
+      "recommended_bands": {
+        "macro_depth_mm": 15.0,
+        "meso_depth_mm": 4.0
+      },
+      "mock_fixture": "bark",
+      "example_images": [],
+      "kind": "sample"
+    },
+    {
+      "id": "mortar_joint",
+      "name": {
+        "en": "Washed-out mortar joint",
+        "de": "Ausgewaschene Mörtelfuge"
+      },
+      "rationale": {
+        "en": "The washed-out joint between old wall stones.",
+        "de": "Die ausgewaschene Fuge zwischen alten Mauersteinen."
+      },
+      "prompt_template": "square flat stone slab, top-down orthographic view, eroded lime mortar joint between dry stone wall blocks, strong relief, even diffuse lighting",
+      "negative_prompt": "statue, sphere, character, text, logo, smooth, glossy",
+      "recommended_functional_template": "moss_nests",
+      "recommended_bands": {
+        "macro_depth_mm": 15.0,
+        "meso_depth_mm": 4.0
+      },
+      "mock_fixture": "karren",
+      "example_images": [],
+      "kind": "sample"
+    },
+    {
+      "id": "frost_brick",
+      "name": {
+        "en": "Frost-cracked brick",
+        "de": "Vom Frost gesprengter Ziegel"
+      },
+      "rationale": {
+        "en": "Brick cracked open by frost.",
+        "de": "Vom Frost aufgesprengter Ziegel."
+      },
+      "prompt_template": "square flat stone slab, top-down orthographic view, frost damaged spalled red brick surface, strong relief, even diffuse lighting",
+      "negative_prompt": "statue, sphere, character, text, logo, smooth, glossy",
+      "recommended_functional_template": "moss_nests",
+      "recommended_bands": {
+        "macro_depth_mm": 15.0,
+        "meso_depth_mm": 4.0
+      },
+      "mock_fixture": "tafoni",
+      "example_images": [],
+      "kind": "sample"
+    },
+    {
+      "id": "shell_limestone",
+      "name": {
+        "en": "Shell limestone with fossils",
+        "de": "Muschelkalk mit Fossilien"
+      },
+      "rationale": {
+        "en": "Stone with fossil shells, hard and soft spots.",
+        "de": "Stein mit Muschelresten, harte und weiche Stellen."
+      },
+      "prompt_template": "square flat stone slab, top-down orthographic view, shell limestone with cut fossil shells, differential weathering, strong relief, even diffuse lighting",
+      "negative_prompt": "statue, sphere, character, text, logo, smooth, glossy",
+      "recommended_functional_template": "moss_nests",
+      "recommended_bands": {
+        "macro_depth_mm": 15.0,
+        "meso_depth_mm": 4.0
+      },
+      "mock_fixture": "tafoni",
+      "example_images": [],
+      "kind": "sample"
+    },
+    {
+      "id": "asphalt_cracks",
+      "name": {
+        "en": "Crack network in old asphalt",
+        "de": "Rissnetz in altem Asphalt"
+      },
+      "rationale": {
+        "en": "Cracks in old asphalt: the city copies itself.",
+        "de": "Risse in altem Asphalt: Die Stadt kopiert sich selbst."
+      },
+      "prompt_template": "square flat stone slab, top-down orthographic view, old cracked asphalt with crack network, strong relief, even diffuse lighting",
+      "negative_prompt": "statue, sphere, character, text, logo, smooth, glossy",
+      "recommended_functional_template": "none",
+      "recommended_bands": {
+        "macro_depth_mm": 15.0,
+        "meso_depth_mm": 4.0
+      },
+      "mock_fixture": "tafoni",
+      "example_images": [],
+      "kind": "sample"
+    },
+    {
+      "id": "REF-FLAT",
+      "name": {
+        "en": "Smooth control tile",
+        "de": "Glatte Vergleichskachel"
+      },
+      "rationale": {
+        "en": "A smooth tile. It shows what grows without any texture.",
+        "de": "Eine glatte Kachel. Sie zeigt, was ganz ohne Struktur wächst."
+      },
+      "kind": "ref_flat",
+      "recommended_functional_template": "none",
+      "recommended_bands": {
+        "macro_depth_mm": 0.0,
+        "meso_depth_mm": 0.0
+      }
+    },
+    {
+      "id": "REF-GEO",
+      "name": {
+        "en": "Standard control tile",
+        "de": "Standard-Vergleichskachel"
+      },
+      "rationale": {
+        "en": "A standard texture after published guidelines, for comparison.",
+        "de": "Eine Standard-Struktur nach veröffentlichten Richtwerten, zum Vergleich."
+      },
+      "kind": "ref_geo",
+      "recommended_functional_template": "none",
+      "recommended_bands": {
+        "macro_depth_mm": 20.0,
+        "meso_depth_mm": 5.0
+      }
+    }
+  ]
+}

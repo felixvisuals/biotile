@@ -1,0 +1,56 @@
+# docker compose up  ->  http://localhost:8080  (mock mode, no Tripo key needed)
+x-app-env: &app-env
+  TRIPO_MODE: ${TRIPO_MODE:-mock}
+  TRIPO_API_KEY: ${TRIPO_API_KEY:-}
+  TRIPO_RECORD: ${TRIPO_RECORD:-false}
+  MOCK_TASK_SECONDS: ${MOCK_TASK_SECONDS:-4}
+  DATABASE_URL: postgresql+psycopg://biotile:biotile@postgres:5432/biotile
+  STORAGE_BACKEND: s3
+  S3_ENDPOINT_URL: http://minio:9000
+  S3_BUCKET: biotile
+  S3_ACCESS_KEY: biotile
+  S3_SECRET_KEY: biotile-secret
+  QUEUE_BACKEND: rq
+  REDIS_URL: redis://redis:6379/0
+  PUBLIC_BASE_URL: ${PUBLIC_BASE_URL:-http://localhost:8080}
+  CORS_ORIGINS: http://localhost:8080
+  PIPELINE_INTERNAL_PX: ${PIPELINE_INTERNAL_PX:-2048}
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment: { POSTGRES_USER: biotile, POSTGRES_PASSWORD: biotile, POSTGRES_DB: biotile }
+    volumes: [pgdata:/var/lib/postgresql/data]
+    healthcheck: { test: ["CMD-SHELL", "pg_isready -U biotile"], interval: 3s, retries: 20 }
+  redis:
+    image: redis:7-alpine
+  minio:
+    image: minio/minio:latest
+    command: server /data --console-address :9001
+    environment: { MINIO_ROOT_USER: biotile, MINIO_ROOT_PASSWORD: biotile-secret }
+    volumes: [miniodata:/data]
+    ports: ["9001:9001"]
+    healthcheck: { test: ["CMD", "mc", "ready", "local"], interval: 3s, retries: 20 }
+  api:
+    build: .
+    environment: *app-env
+    # Seeds the gallery once (idempotent, mock mode only), then serves the API.
+    command: sh -c "python scripts/seed_demo.py || true; uvicorn biotile_api.main:app --host 0.0.0.0 --port 8000"
+    depends_on:
+      postgres: { condition: service_healthy }
+      minio: { condition: service_healthy }
+      redis: { condition: service_started }
+    ports: ["8000:8000"]
+  worker:
+    build: .
+    environment: *app-env
+    command: python -m biotile_worker
+    depends_on: [api]
+  web:
+    build: ./apps/web
+    depends_on: [api]
+    ports: ["8080:80"]
+
+volumes:
+  pgdata:
+  miniodata:
