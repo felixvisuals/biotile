@@ -93,7 +93,8 @@ The key is only read server side; it never reaches the browser, the database or 
 ## Hosting
 
 - **Frontend on Netlify:** `netlify.toml` builds `apps/web` and proxies `/api/*` to the backend. Set the backend host in that file.
-- **Backend anywhere that runs Docker** (Render, Fly.io, Railway, a small VPS): use the `Dockerfile` or `docker-compose.yml`. Set the secrets as environment variables of that service, never in the repo:
+- **Backend on Modal** (free Starter credits): `modal deploy deploy/modal/app.py`, then once `modal run deploy/modal/app.py::seed`. Secrets live in the Modal secret `biotile`.
+- **Or anywhere that runs Docker** (Render, Fly.io, Railway, a small VPS): use the `Dockerfile` or `docker-compose.yml`. Set the secrets as environment variables of that service, never in the repo:
   - `TRIPO_API_KEY` (the `tsk_…` key, not the `tcli_…` client id)
   - `SECRET_KEY`
   - `COOKIE_SECURE=true`
