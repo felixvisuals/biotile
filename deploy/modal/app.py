@@ -41,8 +41,9 @@ image = (
 app = modal.App("biotile")
 volume = modal.Volume.from_name("biotile-data", create_if_missing=True)
 secrets = [modal.Secret.from_name("biotile")]
-# 1 core; memory request 1 GiB, limit 4 GiB (the pipeline peaks at ~2.3 GB during export)
-RES = dict(image=image, volumes={"/vol": volume}, secrets=secrets, cpu=1.0, memory=(1024, 4096))
+# 1 core; memory request 1 GiB, limit 8 GiB (an export peaks at ~2.3 GB; two jobs and a preview
+# can overlap). Only memory actually used is billed above the request.
+RES = dict(image=image, volumes={"/vol": volume}, secrets=secrets, cpu=1.0, memory=(1024, 8192))
 
 
 @app.function(**RES, max_containers=1, scaledown_window=1200, timeout=1800)

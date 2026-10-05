@@ -7,6 +7,7 @@ import io
 import json
 import logging
 import re
+import threading
 from contextlib import asynccontextmanager
 from datetime import date
 
@@ -437,8 +438,9 @@ def patch_params(design_id: str, updates: dict, db: Session = Depends(get_db),
         errs = p.validate()
         if errs:
             raise ValueError("; ".join(errs))
-        result = svc.compute_tile(d, p.with_updates(
-            {"resolution_px": get_settings().pipeline_preview_px}))
+        with _compute_lock:
+            result = svc.compute_tile(d, p.with_updates(
+                {"resolution_px": get_settings().pipeline_preview_px}))
     except (TypeError, ValueError) as e:
         raise HTTPException(422, detail={"key": "errors.invalid_params", "message": str(e)})
     d.pipeline_params = p.to_dict()
@@ -450,6 +452,9 @@ def patch_params(design_id: str, updates: dict, db: Session = Depends(get_db),
 
 
 _preview_cache: dict = {}
+# Interactive previews run one at a time: a burst of parallel requests (the collection loads
+# several 3D cards at once) would otherwise multiply peak memory and kill a small container.
+_compute_lock = threading.Lock()
 
 
 @app.get("/api/designs/{design_id}/preview")
@@ -465,7 +470,8 @@ def preview(design_id: str, n: int = 192, db: Session = Depends(get_db),
     key = (d.id, d.code, json.dumps(d.pipeline_params, sort_keys=True), n)
     cached = _preview_cache.get(key)
     if cached is None:
-        cached = svc.preview_payload(d, svc.compute_tile(d, p), n=n)
+        with _compute_lock:
+            cached = _preview_cache.get(key) or svc.preview_payload(d, svc.compute_tile(d, p), n=n)
         if len(_preview_cache) > 64:
             _preview_cache.clear()
         _preview_cache[key] = cached
