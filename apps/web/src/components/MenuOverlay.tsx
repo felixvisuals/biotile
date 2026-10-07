@@ -13,7 +13,7 @@ export function TextRoll({ children, className = "", center = false }: { childre
   const letters = children.split("");
   const delay = (i: number) => (center ? STAGGER * Math.abs(i - (letters.length - 1) / 2) : STAGGER * i);
   return (
-    <motion.span initial="initial" whileHover="hovered" whileFocus="hovered" className={`relative block overflow-hidden ${className}`} style={{ lineHeight: 1.02, paddingTop: "0.06em" }}>
+    <motion.span initial="initial" whileHover="hovered" whileFocus="hovered" className={`relative block overflow-hidden whitespace-nowrap ${className}`} style={{ lineHeight: 1.02, paddingTop: "0.06em" }}>
       <span className="block">
         {letters.map((l, i) => (
           <motion.span key={i} className="inline-block whitespace-pre" variants={{ initial: { y: 0 }, hovered: { y: "-100%" } }}
@@ -62,7 +62,8 @@ export default function MenuOverlay({ open, onClose, items, footer, closeLabel }
                 const inner = (
                   <span className="flex items-start gap-3">
                     <span className="mt-1 font-mono text-xs opacity-40">[{i}]</span>
-                    <TextRoll center className="text-4xl font-extrabold uppercase tracking-[-0.03em] sm:text-5xl lg:text-6xl">{item.label}</TextRoll>
+                    {/* one line at every width: a wrapped label would reveal the hidden second roll layer */}
+                    <TextRoll center className="text-[clamp(1.25rem,7vw,3.75rem)] font-extrabold uppercase tracking-[-0.03em]">{item.label}</TextRoll>
                   </span>
                 );
                 return (

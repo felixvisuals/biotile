@@ -167,13 +167,29 @@ export default function Editor({ config }: { config: Config | null }) {
 
         {/* controls */}
         <div className="space-y-10 border-t border-line pt-6 md:col-span-6">
+          {/* Barcelona mode sits up front: hexagonal tiles after Gaudí's paving tile */}
+          <label className="flex cursor-pointer items-center justify-between gap-4 border border-line px-4 py-3">
+            <span className="flex items-center gap-3">
+              <Senyera className="h-3 w-[18px]" />
+              <span>
+                <span className="block text-sm font-medium">{t("editor.barcelona")}</span>
+                <span className="block text-xs opacity-50">{t("editor.barcelona_text")}</span>
+              </span>
+            </span>
+            <input type="checkbox" className="size-4 accent-current" checked={params.shape === "hex"}
+              onChange={(e) => update({ shape: e.target.checked ? "hex" : "square" })} />
+          </label>
+
           <section className="space-y-5">
             <Slider label={t("editor.hollows")} hint={t("editor.hollows_hint")} value={params.macro_depth_mm} min={0} max={20} step={0.5} unit="mm" onChange={(v) => update({ macro_depth_mm: v })} />
             <Slider label={t("editor.grooves")} hint={t("editor.grooves_hint")} value={params.meso_depth_mm} min={0} max={5} step={0.25} unit="mm" onChange={(v) => update({ meso_depth_mm: v })} />
           </section>
 
           <section className="space-y-5">
-            <div className="eyebrow">{t("editor.starter")}</div>
+            <div className="flex items-baseline justify-between gap-4">
+              <div className="eyebrow">{t("editor.starter")}</div>
+              <Link to="/moss-starter" className="font-mono text-[10px] uppercase tracking-widest opacity-60 underline-offset-4 hover:underline hover:opacity-100">{t("hang.starter_guide")} →</Link>
+            </div>
             <Pills value={f.template === "diagonal_cascade" ? "diagonal_cascade" : f.template}
               options={(f.template === "diagonal_cascade" ? ["moss_nests", "diagonal_cascade", "none"] as const : ["moss_nests", "none"] as const)
                 .map((v) => ({ value: v, label: t(`editor.starter_opts.${v}`) }))}
@@ -210,9 +226,12 @@ export default function Editor({ config }: { config: Config | null }) {
           </section>
 
           <section>
-            <button className="flex w-full cursor-pointer items-center justify-between border-t border-line pt-3 text-sm font-medium opacity-70 hover:opacity-100" onClick={() => setAdvanced((a) => !a)} aria-expanded={advanced}>
-              {advanced ? t("common.less") : t("common.more")}
-              <span className={`transition-transform ${advanced ? "rotate-45" : ""}`}>+</span>
+            <button className="group flex w-full cursor-pointer items-center justify-between rounded-full border border-fg/25 px-5 py-3 text-sm font-medium transition-colors hover:border-fg hover:bg-fg hover:text-bg" onClick={() => setAdvanced((a) => !a)} aria-expanded={advanced}>
+              <span>
+                {advanced ? t("common.less") : t("common.more")}
+                {!advanced && <span className="ml-2 font-mono text-[10px] uppercase tracking-widest opacity-50">{t("editor.more_hint")}</span>}
+              </span>
+              <span className={`flex size-6 items-center justify-center rounded-full border border-current text-base leading-none transition-transform ${advanced ? "rotate-45" : ""}`}>+</span>
             </button>
             {advanced && (
               <div className="mt-6 space-y-6">
@@ -225,17 +244,6 @@ export default function Editor({ config }: { config: Config | null }) {
                     onChange={(v) => update({ tile_size_mm: v })} />
                   <p className="mt-1 text-xs opacity-40">{t("editor.tile_size_note")}</p>
                 </div>
-                <label className="flex cursor-pointer items-center justify-between gap-4 border border-line px-4 py-3">
-                  <span className="flex items-center gap-3">
-                    <Senyera className="h-3 w-[18px]" />
-                    <span>
-                      <span className="block text-sm font-medium">{t("editor.barcelona")}</span>
-                      <span className="block text-xs opacity-50">{t("editor.barcelona_text")}</span>
-                    </span>
-                  </span>
-                  <input type="checkbox" className="size-4 accent-current" checked={params.shape === "hex"}
-                    onChange={(e) => update({ shape: e.target.checked ? "hex" : "square" })} />
-                </label>
                 <Toggle label={t("editor.front_code")} checked={params.front_code} onChange={(v) => update({ front_code: v })} />
                 <Pills label={t("editor.direction")} value={params.orientation_mode}
                   options={(["auto_along_flow", "cross", "none"] as const).map((v) => ({ value: v, label: t(`editor.direction_opts.${v}`) }))}

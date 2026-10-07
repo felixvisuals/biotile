@@ -13,3 +13,6 @@ apps/web/dist/
 
 # live Tripo recordings (signed download URLs, large GLBs)
 tests/fixtures/tripo/recorded/
+
+# hackathon submission media (local only)
+submission/

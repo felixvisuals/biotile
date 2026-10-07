@@ -1,11 +1,16 @@
 import { useTranslation } from "react-i18next";
+import mossPhotos from "../data/moss-credits.json";
 import photos from "../data/surface-credits.json";
+import templatePhotos from "../data/template-credits.json";
+
+type Photo = { label: string; title: string; source: string; author: string; license: string };
 
 /** Attributions. Not in the main navigation: reachable via the small "Credits" link in the footer. */
 const ROWS: { part: { en: string; de: string }; who: string; href: string; note: string }[] = [
   { part: { en: "Surface gallery (parallax motion)", de: "Oberflächen-Galerie (Parallax-Bewegung)" }, who: "Skiper UI · Skiper30 by Gurvinder Singh, inspired by siena.film", href: "https://skiper-ui.com", note: "Free version, attribution required" },
   { part: { en: "Menu animation (text roll)", de: "Menü-Animation (Text-Roll)" }, who: "Skiper UI · Skiper58", href: "https://skiper-ui.com", note: "Free version, attribution required" },
   { part: { en: "Map", de: "Karte" }, who: "MapLibre GL · OpenFreeMap · © OpenStreetMap contributors", href: "https://openfreemap.org", note: "BSD-3 · ODbL" },
+  { part: { en: "Place suggestions", de: "Ortsvorschläge" }, who: "Photon by komoot · © OpenStreetMap contributors", href: "https://photon.komoot.io", note: "ODbL" },
   { part: { en: "Hero video", de: "Video auf der Startseite" }, who: "Generated with Google Gemini (Veo) for BIOTILE", href: "https://gemini.google.com", note: "AI-generated" },
   { part: { en: "Text input with soft caret", de: "Texteingabe mit weichem Cursor" }, who: "Skiper UI · Skiper106", href: "https://skiper-ui.com", note: "Free version, attribution required" },
   { part: { en: "Loading orbs", de: "Lade-Orbs" }, who: "Thinking Orbs by Yogesh (yogesharc)", href: "https://thinkingorbs.com", note: "MIT" },
@@ -35,19 +40,29 @@ export default function Credits() {
           </div>
         ))}
       </dl>
-      <h2 className="title-md mt-col mb-4">{lang === "de" ? "Fotos: Oberflächen" : "Photos: surfaces"}</h2>
-      <p className="mb-4 text-sm opacity-60">{lang === "de"
-        ? "Alle Fotos stammen von Wikimedia Commons und sind gemeinfrei oder CC0."
-        : "All photos come from Wikimedia Commons and are public domain or CC0."}</p>
-      <dl className="divide-y divide-line border-y border-line">
-        {(photos as { file: string; label: string; title: string; source: string; author: string; license: string }[]).map((p) => (
-          <div key={p.file} className="grid gap-1 py-3 text-sm md:grid-cols-12 md:gap-6">
-            <dt className="font-medium md:col-span-4">{p.label}</dt>
-            <dd className="md:col-span-6"><a href={p.source} target="_blank" rel="noreferrer" className="underline-offset-4 hover:underline">{p.title}</a> · {p.author}</dd>
-            <dd className="font-mono text-xs opacity-40 md:col-span-2 md:text-right">{p.license}</dd>
-          </div>
-        ))}
-      </dl>
+      {([
+        [lang === "de" ? "Fotos: Oberflächen" : "Photos: surfaces", photos as (Photo & { file: string })[]],
+        [lang === "de" ? "Fotos: Vorlagenkatalog" : "Photos: template catalogue",
+          Object.entries(templatePhotos as Record<string, Photo>).map(([id, p]) => ({ ...p, label: id.replace(/_/g, " ") }))],
+        [lang === "de" ? "Fotos: Moos-Starter" : "Photos: moss starter",
+          Object.entries(mossPhotos as Record<string, Photo>).map(([id, p]) => ({ ...p, label: id.replace(/_/g, " ") }))],
+      ] as [string, Photo[]][]).map(([heading, list]) => (
+        <section key={heading}>
+          <h2 className="title-md mt-col mb-4">{heading}</h2>
+          <p className="mb-4 text-sm opacity-60">{lang === "de"
+            ? "Alle Fotos stammen von Wikimedia Commons und sind gemeinfrei oder CC0."
+            : "All photos come from Wikimedia Commons and are public domain or CC0."}</p>
+          <dl className="divide-y divide-line border-y border-line">
+            {list.map((p) => (
+              <div key={p.title} className="grid gap-1 py-3 text-sm md:grid-cols-12 md:gap-6">
+                <dt className="font-medium capitalize md:col-span-4">{p.label}</dt>
+                <dd className="md:col-span-6"><a href={p.source} target="_blank" rel="noreferrer" className="underline-offset-4 hover:underline">{p.title}</a> · {p.author}</dd>
+                <dd className="font-mono text-xs opacity-40 md:col-span-2 md:text-right">{p.license}</dd>
+              </div>
+            ))}
+          </dl>
+        </section>
+      ))}
     </div>
   );
 }

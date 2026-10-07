@@ -14,6 +14,8 @@ const de: Resources = {
   },
   nav: { collection: "Sammlung", make: "Muster gestalten", hang: "Kachel aufhängen", observe: "Beobachten", how: "So geht's" },
   common: {
+    click_to_turn: "Klicken zum Drehen und Zoomen",
+    click_to_use_map: "Klicken, um die Karte zu bedienen",
     loading: "Lädt", back: "Zurück", next: "Weiter", yes: "Ja", no: "Nein", optional: "optional", required: "Pflicht",
     download: "Herunterladen", more: "Mehr Einstellungen", less: "Weniger Einstellungen", all: "Alle", close: "Schließen",
   },
@@ -84,6 +86,7 @@ const de: Resources = {
     },
   },
   editor: {
+    more_hint: "Größe, Richtung, Kachelcode, Feinheiten",
     starter: "Moos-Starter",
     starter_opts: { moss_nests: "Moosnester", diagonal_cascade: "Diagonale Rinnen", none: "Keine" },
     starter_form: "Form für den Moos-Starter",
@@ -186,6 +189,7 @@ const de: Resources = {
     about_reference: "Vergleichskachel für Vergleiche zwischen Standorten.",
   },
   hang: {
+    starter_guide: "So machst du den Moos-Starter",
     mine: "Meine Muster",
     others: "Aus der Sammlung",
     search: "Muster über seinen Code finden",
@@ -194,6 +198,7 @@ const de: Resources = {
     coords_hint: "Optional. Hilft anderen, die Kachel zu finden.",
     gps: "Meinen Standort verwenden",
     gps_fail: "Standort nicht verfügbar.",
+    gps_settings: "Vielleicht sind die Ortungsdienste ausgeschaltet. Schalte sie für deinen Browser ein und versuche es noch einmal (Mac: Systemeinstellungen → Datenschutz & Sicherheit → Ortungsdienste; iPhone: Einstellungen → Datenschutz & Sicherheit → Ortungsdienste → Safari) oder tippe die Koordinaten ein.",
     lat: "Breite",
     lon: "Länge",
     visibility: "Wer sieht die Position?",
@@ -214,6 +219,7 @@ const de: Resources = {
     where: "Wo",
     place: "Ort (nur Stadtteil)",
     height: "Höhe über dem Boden (m)",
+    height_hint: "Vom Boden am Fuß der Wand bis zur Kachel, nicht über Normalnull. Nah am Boden ist es feuchter und Regen spritzt hoch. Das verändert, was wächst.",
     light: "Licht",
     light_opts: { full_sun: "Sonnig", partial: "Halbschatten", shade: "Schatten", deep_shade: "Tiefer Schatten" },
     mount: "Befestigt an",

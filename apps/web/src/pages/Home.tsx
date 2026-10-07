@@ -111,9 +111,14 @@ export default function Home() {
               </li>
             ))}
           </ol>
-          <Link to="/method" className="mt-12 inline-flex items-center gap-2 text-sm font-medium opacity-70 hover:opacity-100">
-            {t("nav.how")} <ArrowRight size={18} />
-          </Link>
+          <div className="mt-12 flex flex-wrap gap-x-10 gap-y-3">
+            <Link to="/method" className="inline-flex items-center gap-2 text-sm font-medium opacity-70 hover:opacity-100">
+              {t("nav.how")} <ArrowRight size={18} />
+            </Link>
+            <Link to="/moss-starter" className="inline-flex items-center gap-2 text-sm font-medium opacity-70 hover:opacity-100">
+              {t("hang.starter_guide")} <ArrowRight size={18} />
+            </Link>
+          </div>
         </div>
       </section>
 

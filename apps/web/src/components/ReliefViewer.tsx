@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
+import { useTranslation } from "react-i18next";
+import { useClickToActivate } from "./useClickToActivate";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { decodeHeights, type Preview } from "../api";
 
@@ -41,7 +43,10 @@ function gridGeometry(z: Float32Array, nx: number, ny: number, w: number, h: num
 
 type Props = { preview: Preview; view: "one" | "wall"; className?: string; compact?: boolean };
 
+const NO_REF = { current: null };
+
 export default function ReliefViewer({ preview, view, className, compact = false }: Props) {
+  const { t } = useTranslation();
   const mountRef = useRef<HTMLDivElement>(null);
   const stateRef = useRef<{
     renderer: THREE.WebGLRenderer; scene: THREE.Scene; camera: THREE.PerspectiveCamera;
@@ -77,10 +82,10 @@ export default function ReliefViewer({ preview, view, className, compact = false
     const group = new THREE.Group();
     scene.add(group);
     if (compact) {
-      // Inside a scrolling page: let the wheel scroll the page unless Ctrl/⌘ is held, and let
-      // vertical swipes scroll on touch screens (horizontal drags still turn the tile).
+      // Inside a scrolling page the tile is passive until clicked (see useClickToActivate):
+      // a disabled OrbitControls ignores wheel and touch, so the page scrolls on undisturbed.
+      controls.enabled = false;
       renderer.domElement.style.touchAction = "pan-y";
-      el.addEventListener("wheel", (e) => { if (!e.ctrlKey && !e.metaKey) e.stopPropagation(); }, { capture: true });
       renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
     }
     const resize = () => {
@@ -155,8 +160,24 @@ export default function ReliefViewer({ preview, view, className, compact = false
     }
   }, [front, wall, preview, view]);
 
+  const active = useClickToActivate(compact ? mountRef : NO_REF, (v) => {
+    const s = stateRef.current;
+    if (s) {
+      s.controls.enabled = v;
+      s.renderer.domElement.style.touchAction = v ? "none" : "pan-y";
+    }
+  });
+
   // data-lenis-prevent: the wheel zooms the model instead of scrolling the page
   return compact
-    ? <div ref={mountRef} className={className ?? "h-[420px] w-full"} />
+    ? (
+      <div ref={mountRef} className={`group ${className ?? "h-[420px] w-full"}`}>
+        {!active && (
+          <span className="pointer-events-none absolute bottom-3 left-1/2 z-10 -translate-x-1/2 whitespace-nowrap rounded-full bg-bg/80 px-3 py-1 font-mono text-[10px] uppercase tracking-widest opacity-0 transition-opacity group-hover:opacity-70">
+            {t("common.click_to_turn")}
+          </span>
+        )}
+      </div>
+    )
     : <div ref={mountRef} data-lenis-prevent className={className ?? "h-[420px] w-full"} />;
 }

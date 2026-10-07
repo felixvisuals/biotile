@@ -14,6 +14,7 @@ import InstancePage from "./pages/InstancePage";
 import Login, { LoginGate } from "./pages/Login";
 import Gaudi, { Senyera } from "./pages/Gaudi";
 import Method from "./pages/Method";
+import MossStarter from "./pages/MossStarter";
 import Observe from "./pages/Observe";
 import Register from "./pages/Register";
 
@@ -126,6 +127,7 @@ export default function App() {
           <Route path="/observe/:id" element={<Observe />} />
           <Route path="/instances/:id" element={<InstancePage />} />
           <Route path="/method" element={<Method />} />
+          <Route path="/moss-starter" element={<MossStarter />} />
           <Route path="/credits" element={<Credits />} />
           <Route path="/gaudi" element={<Gaudi />} />
         </Routes>

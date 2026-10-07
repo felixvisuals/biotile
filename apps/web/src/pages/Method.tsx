@@ -2,7 +2,7 @@ import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { ArrowRight } from "../components/ui";
 
-type Block = { title: string; lead: string; steps?: string[]; points?: string[]; note?: string };
+type Block = { title: string; lead: string; steps?: string[]; points?: string[]; note?: string; more?: { to: string; label: string } };
 
 const CONTENT: Record<"en" | "de", { title: string; lead: string; blocks: Block[]; sources: string }> = {
   de: {
@@ -50,6 +50,7 @@ const CONTENT: Record<"en" | "de", { title: string; lead: string; blocks: Block[
           "In den ersten Wochen bei Trockenheit mit Wasser besprühen.",
         ],
         note: "Nur kleine Mengen sammeln, nur auf dem eigenen Gelände, in Pflasterfugen oder an Mauern, nie in Schutzgebieten. Torfmoose und Weißmoos sind geschützt.",
+        more: { to: "/moss-starter", label: "Ausführliche Anleitung mit Bildern" },
       },
       {
         title: "Der richtige Platz",
@@ -149,6 +150,7 @@ const CONTENT: Record<"en" | "de", { title: string; lead: string; blocks: Block[
           "Mist with water during dry spells in the first weeks.",
         ],
         note: "Collect only small amounts, only on your own grounds, from paving joints or walls, never in protected areas. Peat mosses and cushion moss are protected.",
+        more: { to: "/moss-starter", label: "Full guide with photos" },
       },
       {
         title: "The right spot",
@@ -241,6 +243,9 @@ export default function Method() {
               </ul>
             )}
             {b.note && <p className="mt-6 border-l-2 border-line pl-4 text-sm opacity-60">{b.note}</p>}
+            {b.more && (
+              <Link to={b.more.to} className="btn-ghost mt-6 inline-flex">{b.more.label} <ArrowRight size={18} /></Link>
+            )}
           </div>
         </section>
       ))}

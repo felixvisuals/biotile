@@ -4,6 +4,7 @@ import { Link, useSearchParams } from "react-router-dom";
 import { api, type DesignSummary, type Instance } from "../api";
 import { useAuth } from "../auth";
 import { ArrowRight, ErrorNote, Loading, Pills, RowLink, Toggle } from "../components/ui";
+import PlaceInput from "../components/PlaceInput";
 import { useLocalized } from "../localized";
 
 const today = () => new Date().toISOString().slice(0, 10);
@@ -94,7 +95,7 @@ export default function Register() {
   const [lat, setLat] = useState("");
   const [lon, setLon] = useState("");
   const [visibility, setVisibility] = useState<"approx" | "exact" | "hidden">("approx");
-  const [gpsState, setGpsState] = useState<"idle" | "busy" | "fail">("idle");
+  const [gpsState, setGpsState] = useState<"idle" | "busy" | "fail" | "denied">("idle");
   const [light, setLight] = useState("");
   const [mount, setMount] = useState<string>("wall");
   const [mountDetail, setMountDetail] = useState("");
@@ -130,7 +131,7 @@ export default function Register() {
     setGpsState("busy");
     navigator.geolocation.getCurrentPosition(
       (pos) => { setLat(pos.coords.latitude.toFixed(6)); setLon(pos.coords.longitude.toFixed(6)); setGpsState("idle"); },
-      () => setGpsState("fail"),
+      (err) => setGpsState(err.code === err.TIMEOUT ? "fail" : "denied"),
       { enableHighAccuracy: true, timeout: 15000 },
     );
   };
@@ -152,7 +153,7 @@ export default function Register() {
         stage: material === "concrete" ? 2 : 1, format, orientation_deg: deg, inclination_deg: 90,
         height_above_ground_m: height ? Number(height) : null, shading: light || null,
         booster: starter, booster_recipe: starter ? starterDetails || null : null,
-        mounting_adapter: mount, mounting_detail: mountDetail || null, location_coarse: place || null,
+        mounting_adapter: mount, mounting_detail: (mount === "other" && mountDetail) || null, location_coarse: place || null,
         geo_lat: lat ? Number(lat) : null, geo_lon: lon ? Number(lon) : null, geo_visibility: visibility,
         cast_date: cast || null, installed_date: hung || null, notes: notes || null, channels: "none",
         back_type: material === "concrete" ? "solid" : "shell",
@@ -240,8 +241,12 @@ export default function Register() {
 
       <Block n={4} title={t("hang.where")}>
         <div className="grid gap-8 sm:grid-cols-2">
-          <label><span className="label">{t("hang.place")}</span><input className="field" maxLength={200} value={place} onChange={(e) => setPlace(e.target.value)} /></label>
-          <label><span className="label">{t("hang.height")}</span><input className="field" type="number" min={0} step="0.1" value={height} onChange={(e) => setHeight(e.target.value)} /></label>
+          <label><span className="label">{t("hang.place")}</span><PlaceInput value={place} onChange={setPlace} /></label>
+          <label>
+            <span className="label">{t("hang.height")} <span className="opacity-40">({t("common.optional")})</span></span>
+            <input className="field" type="number" min={0} step="0.1" value={height} onChange={(e) => setHeight(e.target.value)} />
+            <span className="mt-1 block text-xs opacity-50">{t("hang.height_hint")}</span>
+          </label>
         </div>
         <div className="space-y-4 border-l-2 border-line pl-4">
           <div>
@@ -256,6 +261,12 @@ export default function Register() {
             </button>
           </div>
           {gpsState === "fail" && <p className="text-sm text-bad">{t("hang.gps_fail")}</p>}
+          {gpsState === "denied" && (
+            <div className="space-y-1 text-sm">
+              <p className="text-bad">{t("hang.gps_fail")}</p>
+              <p className="opacity-70">{t("hang.gps_settings")}</p>
+            </div>
+          )}
           {(lat || lon) && (
             <Pills label={t("hang.visibility")} value={visibility}
               options={(isSchool ? ["approx", "hidden"] as const : ["approx", "exact", "hidden"] as const)
@@ -267,11 +278,16 @@ export default function Register() {
         <Pills label={t("hang.light")} value={light} options={(["full_sun", "partial", "shade", "deep_shade"] as const).map((v) => ({ value: v, label: t(`hang.light_opts.${v}`) }))} onChange={setLight} />
         <div className="space-y-3">
           <Pills label={t("hang.mount")} value={mount} options={MOUNTS.map((v) => ({ value: v, label: t(`hang.mount_opts.${v}`) }))} onChange={setMount} />
-          <input className="field" maxLength={200} placeholder={t("hang.mount_other")} value={mountDetail} onChange={(e) => setMountDetail(e.target.value)} />
+          {mount === "other" && (
+            <input className="field" maxLength={200} placeholder={t("hang.mount_other")} value={mountDetail} onChange={(e) => setMountDetail(e.target.value)} />
+          )}
         </div>
       </Block>
 
       <Block n={5} title={t("hang.starter")} hint={t("hang.starter_text")}>
+        <Link to="/moss-starter" className="inline-flex items-center gap-2 text-sm font-medium underline-offset-4 hover:underline">
+          {t("hang.starter_guide")} <ArrowRight size={16} />
+        </Link>
         <Toggle label={t("hang.starter_used")} checked={starter} onChange={setStarter} />
         {starter && (
           <label className="block">

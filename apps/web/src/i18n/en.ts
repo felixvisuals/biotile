@@ -12,6 +12,8 @@ const en = {
   },
   nav: { collection: "Collection", make: "Make a pattern", hang: "Hang a tile", observe: "Observe", how: "How it works" },
   common: {
+    click_to_turn: "Click to turn and zoom",
+    click_to_use_map: "Click to use the map",
     loading: "Loading", back: "Back", next: "Next", yes: "Yes", no: "No", optional: "optional", required: "required",
     download: "Download", more: "More settings", less: "Fewer settings", all: "All", close: "Close",
   },
@@ -82,6 +84,7 @@ const en = {
     },
   },
   editor: {
+    more_hint: "Size, direction, tile code, fine-tuning",
     starter: "Moss starter",
     starter_opts: { moss_nests: "Moss nests", diagonal_cascade: "Diagonal channels", none: "None" },
     starter_form: "Shape for the moss starter",
@@ -184,6 +187,7 @@ const en = {
     about_reference: "Control tile for comparisons.",
   },
   hang: {
+    starter_guide: "How to make the moss starter",
     mine: "My patterns",
     others: "From the collection",
     search: "Find a pattern by its code",
@@ -192,6 +196,7 @@ const en = {
     coords_hint: "Optional. Helps others find the tile.",
     gps: "Use my location",
     gps_fail: "Location not available.",
+    gps_settings: "Location services may be switched off. Turn them on for your browser and try again (Mac: System Settings → Privacy & Security → Location Services; iPhone: Settings → Privacy & Security → Location Services → Safari), or type the coordinates in.",
     lat: "Latitude",
     lon: "Longitude",
     visibility: "Who sees the position?",
@@ -212,6 +217,7 @@ const en = {
     where: "Where",
     place: "Place (district only)",
     height: "Height above ground (m)",
+    height_hint: "From the ground at the foot of the wall up to the tile, not above sea level. Close to the ground it is wetter and rain splashes up, which changes what grows.",
     light: "Light",
     light_opts: { full_sun: "Sunny", partial: "Half shade", shade: "Shade", deep_shade: "Deep shade" },
     mount: "Mounted on",

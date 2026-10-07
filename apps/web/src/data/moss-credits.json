@@ -1,0 +1,37 @@
+{
+  "paper": {
+    "label": "paper",
+    "title": "6-Pack-Chicken-Eggs.jpg",
+    "source": "https://commons.wikimedia.org/wiki/File:6-Pack-Chicken-Eggs.jpg",
+    "author": "Evan-Amos",
+    "license": "Public domain"
+  },
+  "collect": {
+    "label": "collect",
+    "title": "Japan Moss Path (14156130903).jpg",
+    "source": "https://commons.wikimedia.org/wiki/File:Japan_Moss_Path_(14156130903).jpg",
+    "author": "Yiannis Theologos Michellis",
+    "license": "CC0"
+  },
+  "mix": {
+    "label": "mix",
+    "title": "Germination and humus.jpg",
+    "source": "https://commons.wikimedia.org/wiki/File:Germination_and_humus.jpg",
+    "author": "Suiseisekiryu",
+    "license": "CC0"
+  },
+  "press": {
+    "label": "press",
+    "title": "Bryum schleicheri (a, 113615-471046) 7856.jpg",
+    "source": "https://commons.wikimedia.org/wiki/File:Bryum_schleicheri_(a,_113615-471046)_7856.jpg",
+    "author": "HermannSchachner",
+    "license": "CC0"
+  },
+  "water": {
+    "label": "water",
+    "title": "Water drops moss.jpg",
+    "source": "https://commons.wikimedia.org/wiki/File:Water_drops_moss.jpg",
+    "author": "Amada44",
+    "license": "Public domain"
+  }
+}

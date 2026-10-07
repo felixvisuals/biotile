@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { api, type LibraryEntry } from "../api";
+import templatePhotos from "../data/template-credits.json";
 import { useAuth } from "../auth";
 import { ArrowRight, ErrorNote, Loading, Toggle } from "../components/ui";
 
@@ -122,6 +123,10 @@ export default function Create() {
                 {entries.map((l) => (
                   <button key={l.id} type="button" onClick={() => { setSurface(l.id); if (!title || entries.some((e) => e.name[lang] === title)) setTitle(l.name[lang]); }}
                     className={`cursor-pointer bg-surface p-4 text-left transition-all ${surface === l.id ? "ring-2 ring-fg" : "hover:opacity-80"}`}>
+                    {l.id in templatePhotos && (
+                      <img src={`/images/templates/${l.id}.jpg`} alt="" loading="lazy"
+                        className="mb-3 aspect-square w-full object-cover" />
+                    )}
                     <div className="text-sm font-medium">{l.name[lang]}</div>
                     <div className="mt-1 line-clamp-3 text-xs opacity-50">{l.rationale[lang]}</div>
                   </button>
