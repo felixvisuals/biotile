@@ -69,3 +69,15 @@ def seed():
                 ["python", "scripts/seed_barcelona.py"]):
         subprocess.run(cmd, check=True, env=env)
     volume.commit()
+
+
+@app.function(**RES, timeout=600)
+def sites():
+    """Add or update the Barcelona example locations and their photos (idempotent).
+    Stop the running api container first, so it does not commit an older database over this."""
+    import os
+    import subprocess
+
+    os.chdir("/app")
+    subprocess.run(["python", "scripts/seed_barcelona.py"], check=True)
+    volume.commit()

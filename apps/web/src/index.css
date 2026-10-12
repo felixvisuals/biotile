@@ -254,13 +254,53 @@ html.lenis body {
 .tile-popup-link {
   display: grid;
   gap: 2px;
-  width: 150px;
+  width: 180px;
 }
-.tile-popup-link img {
-  width: 100%;
+/* gallery: tile preview and photo of the spot take turns (see TileMap) */
+.tile-popup-media {
+  position: relative;
   aspect-ratio: 1;
-  object-fit: contain;
   margin-bottom: 6px;
+  overflow: hidden;
+  border-radius: 8px;
+}
+.tile-popup-media img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transition: opacity 0.8s ease;
+}
+.tile-popup-media img.is-photo {
+  object-fit: cover; /* crops any photo to the square automatically */
+  opacity: 0;
+}
+.tile-popup-media.show-photo img.is-photo {
+  opacity: 1;
+}
+.tile-popup-media.show-photo img.is-tile {
+  opacity: 0;
+}
+.tile-popup-dots {
+  position: absolute;
+  bottom: 6px;
+  left: 50%;
+  display: flex;
+  gap: 4px;
+  transform: translateX(-50%);
+}
+.tile-popup-dots i {
+  width: 5px;
+  height: 5px;
+  border-radius: 999px;
+  background: #fff;
+  opacity: 0.5;
+  box-shadow: 0 0 2px rgb(0 0 0 / 0.5);
+}
+.tile-popup-media:not(.show-photo) .tile-popup-dots i:first-child,
+.tile-popup-media.show-photo .tile-popup-dots i:last-child {
+  opacity: 1;
 }
 .tile-popup-code {
   font-family: var(--font-mono);

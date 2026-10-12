@@ -11,6 +11,7 @@ const ROWS: { part: { en: string; de: string }; who: string; href: string; note:
   { part: { en: "Menu animation (text roll)", de: "Menü-Animation (Text-Roll)" }, who: "Skiper UI · Skiper58", href: "https://skiper-ui.com", note: "Free version, attribution required" },
   { part: { en: "Map", de: "Karte" }, who: "MapLibre GL · OpenFreeMap · © OpenStreetMap contributors", href: "https://openfreemap.org", note: "BSD-3 · ODbL" },
   { part: { en: "Place suggestions", de: "Ortsvorschläge" }, who: "Photon by komoot · © OpenStreetMap contributors", href: "https://photon.komoot.io", note: "ODbL" },
+  { part: { en: "Photos of the example locations", de: "Fotos der Beispielstandorte" }, who: "Mock-ups of real places in Barcelona, tiles added by AI image editing (Google Gemini) for BIOTILE", href: "https://gemini.google.com", note: "AI-edited" },
   { part: { en: "Hero video", de: "Video auf der Startseite" }, who: "Generated with Google Gemini (Veo) for BIOTILE", href: "https://gemini.google.com", note: "AI-generated" },
   { part: { en: "Text input with soft caret", de: "Texteingabe mit weichem Cursor" }, who: "Skiper UI · Skiper106", href: "https://skiper-ui.com", note: "Free version, attribution required" },
   { part: { en: "Loading orbs", de: "Lade-Orbs" }, who: "Thinking Orbs by Yogesh (yogesharc)", href: "https://thinkingorbs.com", note: "MIT" },

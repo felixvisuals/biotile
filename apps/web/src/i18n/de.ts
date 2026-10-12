@@ -27,7 +27,7 @@ const de: Resources = {
     credit_variants: ["für die Lebewesen in der Stadt.", "für die Insekten der Stadt.", "an das Leben der Stadt."],
     map_title: "Wo Kacheln hängen",
     map_text: "Jeder Punkt ist eine Kachel mit eigener Nummer. Ein Klick zeigt ihre Fotos und wer schon eingezogen ist.",
-    map_note: "Die Punkte in Barcelona sind Beispielstandorte für die Präsentation. Karte: © OpenStreetMap-Mitwirkende, OpenFreeMap.",
+    map_note: "Die Punkte in Barcelona sind Beispielstandorte für die Präsentation. Ihre Fotos sind Mock-ups: echte Orte, die Kacheln wurden per KI-Bildbearbeitung eingefügt. Karte: © OpenStreetMap-Mitwirkende, OpenFreeMap.",
     map_count_one: "{{count}} Kachel auf der Karte",
     map_count_other: "{{count}} Kacheln auf der Karte",
     start: "Muster gestalten",

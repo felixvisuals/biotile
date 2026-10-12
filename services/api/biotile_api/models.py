@@ -216,6 +216,9 @@ class Instance(Base):
     booster_date: Mapped[str | None] = mapped_column(String(10))
     mounting_adapter: Mapped[str | None] = mapped_column(String(16))  # wall|fence|facade|post|tree|other
     mounting_detail: Mapped[str | None] = mapped_column(String(200))  # free text
+    # photo of the spot where the tile hangs (shown on the map); content-addressed like
+    # observation photos: sites/<sha[:2]>/<sha>.jpg
+    site_photo_key: Mapped[str | None] = mapped_column(String(300))
     cast_date: Mapped[str | None] = mapped_column(String(10))
     installed_date: Mapped[str | None] = mapped_column(String(10))
     orientation_deg: Mapped[float] = mapped_column(Float)  # mandatory

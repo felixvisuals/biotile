@@ -140,6 +140,14 @@ def jury_login(request: Request, response: Response, db: Session = Depends(get_d
     return _me(acc)
 
 
+def _site_photo(i: Instance) -> str | None:
+    """Photo of the hanging spot: the dedicated site photo, else the latest observation photo."""
+    if i.site_photo_key:
+        return i.site_photo_key
+    obs = [o for o in i.observations if o.photo_key and o.moderation_status == "approved"]
+    return max(obs, key=lambda o: (o.observed_at, o.created_at)).photo_key if obs else None
+
+
 @app.get("/api/locations")
 def locations(db: Session = Depends(get_db), acc: Account | None = Depends(optional_account)):
     """Public positions of hanging tiles (rounded as the owner chose) for the map."""
@@ -152,7 +160,8 @@ def locations(db: Session = Depends(get_db), acc: Account | None = Depends(optio
             out.append({"id": i.id, "lat": g["lat"], "lon": g["lon"], "title": i.design.title, "title_en": i.design.title_en,
                         "place": i.location_coarse,
                         "preview_url": _file_url((i.design.files or {}).get("preview"),
-                                                 _preview_version(i.design))})
+                                                 _preview_version(i.design)),
+                        "photo_url": _file_url(_site_photo(i))})
     return out
 
 
@@ -549,7 +558,7 @@ def remix(design_id: str, db: Session = Depends(get_db),
 
 # -- files ----------------------------------------------------------------------------
 PUBLIC_FILE = re.compile(r"^(designs/[0-9a-f]{32}/(preview|preview_3x3|tripo_render)\.png|"
-                         r"observations/[0-9a-f]{2}/[0-9a-f]{64}\.(jpg|png|webp))$")
+                         r"(observations|sites)/[0-9a-f]{2}/[0-9a-f]{64}\.(jpg|png|webp))$")
 
 
 @app.get("/api/files/{key:path}")
@@ -616,6 +625,7 @@ def serialize_instance(i: Instance, viewer: Account | None = None) -> dict:
         "geo": _geo(i, viewer), "mounting_detail": i.mounting_detail,
         "design_shape": (i.design.pipeline_params or {}).get("shape", "square"),
         "design_preview_url": _file_url((i.design.files or {}).get("preview"), _preview_version(i.design)),
+        "site_photo_url": _file_url(i.site_photo_key),
         "id": i.id, "design_id": i.design_id, "design_code": i.design.code,
         "design_title": i.design.title, "design_title_en": i.design.title_en, "material": i.material, "process": i.process,
         "format": i.format, "stage": i.stage, "orientation_deg": i.orientation_deg,

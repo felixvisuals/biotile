@@ -25,7 +25,7 @@ const en = {
     credit_variants: ["for Urban Life.", "for Urban Nature.", "for Living Things.", "for Urban Habitats.", "for the City's Insects."],
     map_title: "Where tiles hang",
     map_text: "Every dot is a tile with its own number. Click it to see its photos and what has moved in.",
-    map_note: "The dots in Barcelona are example locations for the presentation. Map: © OpenStreetMap contributors, OpenFreeMap.",
+    map_note: "The dots in Barcelona are example locations for the presentation. Their photos are mock-ups: real places, with the tiles added by AI image editing. Map: © OpenStreetMap contributors, OpenFreeMap.",
     map_count_one: "{{count}} tile on the map",
     map_count_other: "{{count}} tiles on the map",
     start: "Make a pattern",

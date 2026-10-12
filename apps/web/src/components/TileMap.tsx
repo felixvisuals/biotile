@@ -7,7 +7,9 @@ import { Loading } from "./ui";
 import { useClickToActivate } from "./useClickToActivate";
 import { useLocalized } from "../localized";
 
-type Loc = { id: string; lat: number; lon: number; title: string; place: string | null; preview_url: string | null };
+type Loc = { id: string; lat: number; lon: number; title: string; title_en: string | null; place: string | null; preview_url: string | null; photo_url: string | null };
+
+const GALLERY_MS = 2800; // how long the tile preview and the spot photo are shown in turn
 
 /**
  * Interactive monochrome map of hanging tiles. Map data © OpenStreetMap contributors,
@@ -59,15 +61,33 @@ export default function TileMap({ className = "" }: { className?: string }) {
         const el = document.createElement("button");
         el.className = "tile-marker";
         el.setAttribute("aria-label", `${l.id} · ${L.title(l)}`);
-        const popup = new maplibregl.Popup({ offset: 14, closeButton: false, className: "tile-popup" }).setHTML(
+        const popup = new maplibregl.Popup({ offset: 14, closeButton: false, className: "tile-popup", anchor: "bottom" }).setHTML(
           `<a href="/instances/${encodeURIComponent(l.id)}" class="tile-popup-link">` +
-          (l.preview_url ? `<img src="${l.preview_url}" alt="" />` : "") +
+          (l.preview_url || l.photo_url
+            ? `<div class="tile-popup-media">` +
+              (l.preview_url ? `<img class="is-tile" src="${l.preview_url}" alt="" />` : "") +
+              (l.photo_url ? `<img class="is-photo" src="${l.photo_url}" alt="" />` : "") +
+              (l.preview_url && l.photo_url ? `<span class="tile-popup-dots"><i></i><i></i></span>` : "") +
+              `</div>`
+            : "") +
           `<span class="tile-popup-code">${l.id}</span><span class="tile-popup-title"></span>` +
           `<span class="tile-popup-place"></span></a>`,
         );
         // plain text, never HTML, for user-provided fields
+        let timer = 0;
+        popup.on("close", () => window.clearInterval(timer));
         popup.on("open", () => {
+          // the popup sits above its dot: move the dot down so the card fits inside the map
+          m.easeTo({ center: [l.lon, l.lat], offset: [0, Math.min(130, m.getContainer().clientHeight / 2 - 40)], duration: 400 });
           const root = popup.getElement();
+          const media = root?.querySelector(".tile-popup-media");
+          if (media && l.preview_url && l.photo_url) {
+            media.classList.remove("show-photo");
+            window.clearInterval(timer);
+            timer = window.setInterval(() => media.classList.toggle("show-photo"), GALLERY_MS);
+          } else if (media && l.photo_url) {
+            media.classList.add("show-photo");
+          }
           const tt = root?.querySelector(".tile-popup-title");
           const pl = root?.querySelector(".tile-popup-place");
           if (tt) tt.textContent = L.title(l);
