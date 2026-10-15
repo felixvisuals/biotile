@@ -190,6 +190,11 @@ DEFAULT_PRINTER = "bambu_a1_mini"
 # --------------------------------------------------------------------------------------
 INTERNAL_RASTER_PX = 2048  # ~0.07 mm/px over the tile
 EXPORT_GRID_MM = 0.2  # FDM 0.4 mm nozzle cannot resolve finer
+# Positive test tile (print output "positive"): the finished front 1:1 on a flat base plate.
+# Our choice, not from a paper: 3 mm = 15 layers at 0.2 mm, stiff enough not to warp at 180 mm.
+POSITIVE_BASE_MM = 3.0
+POSITIVE_BASE_RANGE_MM = (1.0, 10.0)
+PRINT_OUTPUTS = ("tools", "positive")  # casting tool set | positive test tile
 EXPORT_MAX_TRIANGLES = 500_000
 RASTER_CROP_FRACTION = 0.7  # central part of the generated sample, avoids mesh borders
 DETREND_POLY_ORDER = 2

@@ -27,6 +27,8 @@ export type TileParams = {
   shape: "square" | "hex";
   tile_size_mm: number;
   front_code: boolean;
+  print_output: "tools" | "positive";
+  positive_base_mm: number;
   material: "clay" | "concrete" | "lime" | "loam";
   process: "press_mould" | "matrix_down" | "stamp_down";
   tool_material: string;

@@ -266,3 +266,33 @@ def test_hanging_pads_inside_tile(shape, size):
     for x, y in fr.hanging_points():
         d = lat.edge_distance(np.array(cx - x), np.array(cy + y))
         assert d >= C.HANG_PAD_DIAMETER_MM / 2, (shape, size, x, y, d)
+
+
+# --- positive test tile -----------------------------------------------------------------
+@pytest.mark.parametrize("shape", ["square", "hex"])
+@pytest.mark.parametrize("size", [100.0, 180.0])
+def test_positive_test_tile(raw_bark, shape, size):
+    """Only the positive is printed; flat base, true size, true depth, every recess kept."""
+    p = TileParams(**FAST).with_updates({"shape": shape, "tile_size_mm": size,
+                                         "print_output": "positive", "positive_base_mm": 3.0})
+    r = run_stage_b(raw_bark, p)
+    ts = build_toolset(r, grid_mm=0.5)
+    assert set(ts.parts) == {"positive"}
+    m = ts.parts["positive"]
+    assert m.is_watertight and m.volume > 0
+    lo, hi = m.bounds
+    inside = r.front[r.mask]
+    relief = float(inside.max() - inside.min())
+    assert lo[2] == pytest.approx(0.0, abs=1e-6)
+    assert hi[2] == pytest.approx(3.0 + relief, abs=0.2)  # base + full relief, not scaled
+    span = size if shape == "square" else r.lattice.bbox[0]
+    assert hi[0] - lo[0] == pytest.approx(span, abs=0.6)  # 1:1, no clay shrink allowance
+    # the base is solid everywhere: no recess cuts into it
+    z_min_top = np.min(m.vertices[m.vertices[:, 2] > 1e-6][:, 2])
+    assert z_min_top == pytest.approx(3.0, abs=0.05)
+
+
+def test_positive_base_is_adjustable_and_validated():
+    assert TileParams(positive_base_mm=6.0).validate() == []
+    assert TileParams(positive_base_mm=0.5).validate()
+    assert TileParams(print_output="statue").validate()

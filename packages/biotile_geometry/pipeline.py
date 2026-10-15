@@ -42,6 +42,8 @@ class TileParams:
     shape: str = "square"  # square | hex ("Barcelona mode")
     tile_size_mm: float = C.TILE_SIZE_MM  # square: side; hex: flat-to-flat
     front_code: bool = True  # emboss the tile code on the front
+    print_output: str = "tools"  # tools (mould/stamp, frame, plate) | positive (test tile)
+    positive_base_mm: float = C.POSITIVE_BASE_MM  # base plate under the positive's relief
     material: str = "clay"
     process: str = "press_mould"
     tool_material: str = "pla"
@@ -71,6 +73,11 @@ class TileParams:
             errs.append("orientation_mode must be auto_along_flow, cross or none")
         if self.edge_mode not in ("periodic", "framed"):
             errs.append("edge_mode must be periodic or framed")
+        if self.print_output not in C.PRINT_OUTPUTS:
+            errs.append(f"print_output must be one of {C.PRINT_OUTPUTS}")
+        lo, hi = C.POSITIVE_BASE_RANGE_MM
+        if not lo <= self.positive_base_mm <= hi:
+            errs.append(f"positive_base_mm must be {lo}-{hi} mm")
         if self.shape not in C.TILE_SHAPES:
             errs.append(f"shape must be one of {C.TILE_SHAPES}")
         if self.tile_size_mm not in C.TILE_SIZES_MM:

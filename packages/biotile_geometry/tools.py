@@ -141,6 +141,36 @@ def build_matrix(result: TileResult, grid_mm: float = C.EXPORT_GRID_MM,
     return from_manifold(parts)
 
 
+def build_positive(result: TileResult, grid_mm: float = C.EXPORT_GRID_MM,
+                   max_faces: int = C.EXPORT_MAX_TRIANGLES) -> trimesh.Trimesh:
+    """Positive test tile: the finished front at 1:1 on a flat base (square or hexagon).
+
+    Not mirrored and not scaled for clay shrinkage: it shows the fired tile, relief up, so a
+    pattern can be checked in the hand before tools are printed. The deepest point of the front
+    sits exactly on the base top, so every recess keeps its true depth.
+    """
+    p = result.params
+    lat = result.lattice
+    fr = ToolFrame(lat=lat, s=1.0, z_front=0.0, wall_h=0.0)
+    w, h = lat.bbox
+    w, h = w + 1.0, h + 1.0
+    n_x = int(math.ceil(w / grid_mm)) + 1
+    n_y = int(math.ceil(h / grid_mm)) + 1
+    dx = max(w / (n_x - 1), h / (n_y - 1))
+    x0, y0 = -(n_x - 1) * dx / 2, -(n_y - 1) * dx / 2
+    # _sample_front works in mirrored casting coordinates; the grid is symmetric about x = 0,
+    # so flipping the columns gives the front as seen from the street
+    front = _sample_front(result, fr, n_x, n_y, dx, x0, y0)[:, ::-1]
+    inside = result.front[result.mask] if result.mask is not None else result.front
+    deepest = float(np.min(inside))
+    top = p.positive_base_mm + np.clip(front - deepest, 0.0, None)
+    solid = decimate(heightfield_solid(top, x0, y0, dx, z_bottom=0.0), max_faces - 4_000)
+    cx, cy = lat.tile_center()
+    outline = CrossSection([[(x - cx, y - cy) for x, y in lat.outline()]])
+    prism = Manifold.extrude(outline, float(top.max()) + 1.0)
+    return from_manifold(to_manifold(solid) ^ prism)
+
+
 def _rod_along_y(x: float, z: float, y0: float, y1: float, r: float) -> Manifold:
     cyl = Manifold.cylinder(y1 - y0, r, r, 48)
     return cyl.rotate([-90.0, 0.0, 0.0]).translate([x, y0, z])
@@ -326,6 +356,8 @@ def bed_fit_estimate(p: TileParams) -> dict[str, dict]:
     """Fast estimate for the editor (exact check runs on export): largest footprint side."""
     fr = ToolFrame.from_params(p)
     w, h = fr.lat.bbox
+    if p.print_output == "positive":
+        return {"positive": {"extent_mm": round(max(w, h), 1)}}
     matrix = max(w, h) * fr.s + 2 * fr.F
     frame = (fr.S if fr.lat.shape == "square" else w * fr.s) + 2 * (fr.c + fr.T)
     plate = max(w, h) * fr.s + 2 * (fr.c + 4.0)
@@ -358,10 +390,13 @@ class ToolSet:
 
 def build_toolset(result: TileResult, grid_mm: float = C.EXPORT_GRID_MM) -> ToolSet:
     p = result.params
-    parts: dict[str, trimesh.Trimesh] = {"matrix": build_matrix(result, grid_mm)}
-    parts.update(build_frame_walls(p))
-    parts["backplate"] = build_backplate(p)
-    parts["hole_punch"] = build_hole_punch(p)
+    if p.print_output == "positive":
+        parts: dict[str, trimesh.Trimesh] = {"positive": build_positive(result, grid_mm)}
+    else:
+        parts = {"matrix": build_matrix(result, grid_mm)}
+        parts.update(build_frame_walls(p))
+        parts["backplate"] = build_backplate(p)
+        parts["hole_punch"] = build_hole_punch(p)
     small = C.PRINTER_PROFILES["bambu_a1_mini"]["volume_mm"]
     large = C.PRINTER_PROFILES["bambu_p1s"]["volume_mm"]
     bed = {}

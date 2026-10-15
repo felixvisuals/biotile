@@ -86,6 +86,13 @@ const de: Resources = {
     },
   },
   editor: {
+    output: "Drucken",
+    output_opts: { tools: "Gusswerkzeuge", positive: "Positiv-Testkachel" },
+    output_hint: {
+      tools: "Form oder Stempel, Gießrahmen und Rückplatte, um echte Kacheln herzustellen.",
+      positive: "Nur die Kachel selbst, 1:1 mit dem Relief nach oben auf einer flachen Platte: zum Ansehen und Anfassen, bevor du die Werkzeuge druckst. Die Größe stellst du oben ein.",
+    },
+    positive_base: "Platte unter dem Relief",
     more_hint: "Größe, Richtung, Kachelcode, Feinheiten",
     starter: "Moos-Starter",
     starter_opts: { moss_nests: "Moosnester", diagonal_cascade: "Diagonale Rinnen", none: "Keine" },

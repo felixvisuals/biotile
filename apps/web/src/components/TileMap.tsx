@@ -26,6 +26,9 @@ function setInteractive(m: import("maplibre-gl").Map, on: boolean) {
 export default function TileMap({ className = "" }: { className?: string }) {
   const { t } = useTranslation();
   const L = useLocalized();
+  // the map is built once; popups read the current language when they open
+  const titleRef = useRef(L.title);
+  titleRef.current = L.title;
   const ref = useRef<HTMLDivElement>(null);
   const box = useRef<HTMLDivElement>(null);
   const mapRef = useRef<import("maplibre-gl").Map | null>(null);
@@ -90,7 +93,7 @@ export default function TileMap({ className = "" }: { className?: string }) {
           }
           const tt = root?.querySelector(".tile-popup-title");
           const pl = root?.querySelector(".tile-popup-place");
-          if (tt) tt.textContent = L.title(l);
+          if (tt) tt.textContent = titleRef.current(l);
           if (pl) pl.textContent = l.place ?? "";
         });
         new maplibregl.Marker({ element: el }).setLngLat([l.lon, l.lat]).setPopup(popup).addTo(m);

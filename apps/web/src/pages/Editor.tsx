@@ -244,6 +244,17 @@ export default function Editor({ config }: { config: Config | null }) {
                     onChange={(v) => update({ tile_size_mm: v })} />
                   <p className="mt-1 text-xs opacity-40">{t("editor.tile_size_note")}</p>
                 </div>
+                {/* what gets printed: the casting tools, or a positive test tile to hold in the hand */}
+                <div className="space-y-4 border-l-2 border-line pl-4">
+                  <Pills label={t("editor.output")} value={params.print_output ?? "tools"}
+                    options={(["tools", "positive"] as const).map((v) => ({ value: v, label: t(`editor.output_opts.${v}`) }))}
+                    onChange={(v) => update({ print_output: v })} />
+                  <p className="text-xs opacity-50">{t(`editor.output_hint.${params.print_output ?? "tools"}`)}</p>
+                  {params.print_output === "positive" && (
+                    <Slider label={t("editor.positive_base")} value={params.positive_base_mm ?? 3} min={1} max={10} step={0.5} unit="mm"
+                      onChange={(v) => update({ positive_base_mm: v })} />
+                  )}
+                </div>
                 <Toggle label={t("editor.front_code")} checked={params.front_code} onChange={(v) => update({ front_code: v })} />
                 <Pills label={t("editor.direction")} value={params.orientation_mode}
                   options={(["auto_along_flow", "cross", "none"] as const).map((v) => ({ value: v, label: t(`editor.direction_opts.${v}`) }))}

@@ -83,6 +83,7 @@ def _readme(design_id: str) -> str:
             "  frame_*         casting frame (square: 4 walls, hexagon: 2 halves), on the pins\n"
             "  backplate       presses the back flat; guide bosses for the hanging holes\n"
             "  hole_punch      makes the two slanted hanging holes through the guides\n"
+            "  positive        (print output 'positive' only) test tile 1:1, relief up, on a flat base\n"
             "heightfield/: finished front, 16-bit PNG and float32 NPY in mm (0 = reference plane)\n"
             "docs/instructions.pdf: process steps, checks, print settings\n"
             "docs/reference_card_blank.pdf: hold into every monitoring photo\n"

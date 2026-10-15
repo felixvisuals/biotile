@@ -84,6 +84,13 @@ const en = {
     },
   },
   editor: {
+    output: "Print",
+    output_opts: { tools: "Casting tools", positive: "Positive test tile" },
+    output_hint: {
+      tools: "Mould or stamp, casting frame and back plate for making real tiles.",
+      positive: "Just the tile itself, 1:1 and relief up, on a flat base: print it to see and feel the pattern before you make the tools. Choose the size above.",
+    },
+    positive_base: "Base under the relief",
     more_hint: "Size, direction, tile code, fine-tuning",
     starter: "Moss starter",
     starter_opts: { moss_nests: "Moss nests", diagonal_cascade: "Diagonal channels", none: "None" },
