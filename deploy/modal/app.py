@@ -81,3 +81,18 @@ def sites():
     os.chdir("/app")
     subprocess.run(["python", "scripts/seed_barcelona.py"], check=True)
     volume.commit()
+
+
+@app.function(**RES, timeout=300)
+def invite(note: str, limit: int = 0, uses: int = 1, days: int = 60):
+    """Create one invite code on the hosted database; limit > 0 gives accounts created with it
+    their own live generation limit. Stop the running api container first (see sites())."""
+    import os
+    import subprocess
+
+    os.chdir("/app")
+    cmd = ["python", "scripts/invites.py", "create", "--note", note, "--uses", str(uses), "--days", str(days)]
+    if limit:
+        cmd += ["--limit", str(limit)]
+    subprocess.run(cmd, check=True)
+    volume.commit()

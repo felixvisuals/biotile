@@ -66,6 +66,8 @@ class Invite(Base):
     uses: Mapped[int] = mapped_column(Integer, default=0)
     expires_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
     revoked: Mapped[bool] = mapped_column(Boolean, default=False)
+    # optional: accounts created with this code get their own live generation limit
+    generation_limit: Mapped[int | None] = mapped_column(Integer)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now)
 
 

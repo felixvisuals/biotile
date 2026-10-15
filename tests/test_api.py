@@ -287,3 +287,36 @@ def test_live_quota_falls_back_to_mock():
             before = acc.generations_used_mock
             assert auth.charge_with_fallback(db, acc, "live") == "mock"
             assert acc.generations_used_mock == before + 1
+
+
+def test_invite_with_limit_and_jury_limit(client):  # client: use the temporary test database
+    import os
+
+    from biotile_api import auth, settings
+    from biotile_api.main import app
+    from biotile_api.models import Account, Invite, SessionLocal
+
+    os.environ["REGISTRATION_REQUIRES_INVITE"] = "true"
+    settings.get_settings.cache_clear()
+    auth._hits.clear()  # earlier tests used up the per-IP registration allowance
+    try:
+        with TestClient(app) as c, SessionLocal() as db:
+            code = auth.generate_invite_code()
+            db.add(Invite(code_hash=auth.hash_invite(code), max_uses=1, generation_limit=50))
+            db.commit()
+            body = {"name": "Demo", "email": "demo50@example.org", "password": "long-enough-pw",
+                    "type": "researcher", "invite_code": code}
+            assert c.post("/api/auth/register", json=body).status_code == 200
+            acc = db.query(Account).filter(Account.email == "demo50@example.org").one()
+            assert acc.generation_limit == 50 and auth.quota(acc, "live")["limit"] == 50
+            jury = db.query(Account).filter(Account.type == "jury").one_or_none()
+            if jury:  # an older jury account follows the configured limit on its next login
+                jury.generation_limit = 10
+                db.commit()
+            c.post("/api/auth/jury")
+            db.expire_all()
+            jury = db.query(Account).filter(Account.type == "jury").one()
+            assert jury.generation_limit == settings.get_settings().jury_generation_limit == 20
+    finally:
+        os.environ["REGISTRATION_REQUIRES_INVITE"] = "false"
+        settings.get_settings.cache_clear()

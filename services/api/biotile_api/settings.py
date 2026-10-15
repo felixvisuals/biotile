@@ -42,7 +42,7 @@ class Settings(BaseSettings):
     session_days: int = 30
     # Competition jury: one-click login into a shared jury account (no email, no invite).
     jury_login_enabled: bool = True
-    jury_generation_limit: int = 10
+    jury_generation_limit: int = 20
     cookie_secure: bool = False  # set true behind HTTPS
 
     # App

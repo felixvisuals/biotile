@@ -1,7 +1,7 @@
 """Manage registration invite codes (server side only).
 
     uv run python scripts/invites.py init                      # create SECRET_KEY in .env
-    uv run python scripts/invites.py create --note "School X" --uses 1 --days 60 [--count 5]
+    uv run python scripts/invites.py create --note "School X" --uses 1 --days 60 [--count 5] [--limit 50]
     uv run python scripts/invites.py list
     uv run python scripts/invites.py revoke <invite-id>
 
@@ -45,6 +45,8 @@ def main() -> int:
     c.add_argument("--days", type=int, default=60)
     c.add_argument("--count", type=int, default=1)
     c.add_argument("--code", default=None, help="use this code instead of a random one")
+    c.add_argument("--limit", type=int, default=None,
+                   help="live generation limit for accounts created with this code")
     sub.add_parser("list")
     r = sub.add_parser("revoke")
     r.add_argument("invite_id")
@@ -66,10 +68,11 @@ def main() -> int:
             for _ in range(args.count):
                 code = args.code or generate_invite_code()
                 inv = Invite(code_hash=hash_invite(code), note=args.note, max_uses=args.uses,
-                             expires_at=exp)
+                             expires_at=exp, generation_limit=args.limit)
                 db.add(inv)
                 db.commit()
-                print(f"{code}   (id {inv.id}, uses {args.uses}, expires {exp:%Y-%m-%d})")
+                lim = f", limit {args.limit}" if args.limit else ""
+                print(f"{code}   (id {inv.id}, uses {args.uses}, expires {exp:%Y-%m-%d}{lim})")
         elif args.cmd == "list":
             for inv in db.query(Invite).order_by(Invite.created_at):
                 state = "revoked" if inv.revoked else f"{inv.uses}/{inv.max_uses} used"

@@ -23,7 +23,17 @@ from sqlalchemy.orm import Session
 from . import auth
 from . import design_service as svc
 from .auth import current_account, get_db, optional_account
-from .models import Account, Design, Instance, Job, Observation, SessionLocal, Upload, init_db
+from .models import (
+    Account,
+    Design,
+    Instance,
+    Invite,
+    Job,
+    Observation,
+    SessionLocal,
+    Upload,
+    init_db,
+)
 from .queue import enqueue
 from .settings import get_settings
 from .storage import get_storage
@@ -107,6 +117,9 @@ def register(body: RegisterBody, request: Request, response: Response,
         raise HTTPException(403, detail={"key": "errors.invite_invalid"})
     acc = Account(name=body.name.strip(), email=email, type=body.type,
                   region_coarse=body.region_coarse, password_hash=auth.hash_password(body.password))
+    if body.invite_code:  # some invites carry their own generation limit
+        acc.generation_limit = db.scalar(select(Invite.generation_limit).where(
+            Invite.code_hash == auth.hash_invite(body.invite_code)))
     db.add(acc)
     db.commit()
     auth.start_session(db, response, acc)
@@ -135,6 +148,9 @@ def jury_login(request: Request, response: Response, db: Session = Depends(get_d
     if acc is None:
         acc = Account(name="Jury", type="jury", generation_limit=s.jury_generation_limit)
         db.add(acc)
+        db.commit()
+    elif acc.generation_limit != s.jury_generation_limit:  # follow the configured limit
+        acc.generation_limit = s.jury_generation_limit
         db.commit()
     auth.start_session(db, response, acc)
     return _me(acc)
