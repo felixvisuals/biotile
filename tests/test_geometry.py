@@ -296,3 +296,25 @@ def test_positive_base_is_adjustable_and_validated():
     assert TileParams(positive_base_mm=6.0).validate() == []
     assert TileParams(positive_base_mm=0.5).validate()
     assert TileParams(print_output="statue").validate()
+
+
+# --- front code and hexagon edges (0.3.1) ---------------------------------------------------
+@pytest.mark.parametrize("size", [100.0, 150.0, 180.0])
+def test_hex_front_code_lies_inside_the_outline(raw_bark, size):
+    from biotile_geometry.pipeline import stamp_front_code
+
+    p = TileParams(resolution_px=512).with_updates({"shape": "hex", "tile_size_mm": size})
+    r = stamp_front_code(run_stage_b(raw_bark, p), "BT-SUB7KQ")
+    r0, c0, h, w = r.code_box
+    assert r.mask[r0:r0 + h, c0:c0 + w].all()  # no letter is cut by the slanted edges
+
+
+def test_hex_positive_has_no_edge_spikes(raw_bark):
+    """Along the cut edges the top stays within the relief inside, no spikes up to the
+    flat outside level."""
+    p = TileParams(**FAST).with_updates({"shape": "hex", "tile_size_mm": 100.0, "print_output": "positive"})
+    r = run_stage_b(raw_bark, p)
+    m = build_toolset(r, grid_mm=0.5).parts["positive"]
+    inside = r.front[r.mask]
+    top_max = 3.0 + float(inside.max() - inside.min())
+    assert m.bounds[1][2] <= top_max + 0.05

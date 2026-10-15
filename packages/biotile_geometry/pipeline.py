@@ -157,6 +157,7 @@ class TileResult:
     checks: list[Check]
     px_mm: float  # cartesian raster pixel
     code: str | None = None
+    code_box: tuple[int, int, int, int] | None = None  # row, col, height, width of the code
 
     @property
     def lattice(self) -> Lattice:
@@ -390,7 +391,8 @@ def code_mask(text: str, px_mm: float) -> np.ndarray:
 
 
 def stamp_front_code(result: TileResult, text: str) -> TileResult:
-    """Emboss the tile code into a small flattened field near the bottom-right edge.
+    """Emboss the tile code into a small flattened field near the bottom edge (square: bottom
+    right; hexagon: centred, raised until it lies fully inside the outline).
 
     The field is blended into the relief over 3 mm; the letters are 1 mm deep in the tile
     (raised on the matrix). This is the only place where the pattern is not seamless.
@@ -403,17 +405,25 @@ def stamp_front_code(result: TileResult, text: str) -> TileResult:
     h, w = letters.shape
     ny, nx = result.front.shape
     margin = int(round(C.FRONT_CODE_MARGIN_MM / px))
+    pad = int(round(2.0 / px))
     if lat.shape == "square":
         r0, c0 = ny - margin - h, nx - margin - w
-    else:  # just above the flat bottom edge, right of the centre
+    else:  # centred above the flat bottom edge
         r0 = ny - margin - h
-        c0 = int(round(nx / 2 + (C.FRONT_CODE_MARGIN_MM / px)))
+        c0 = int(round((nx - w) / 2))
     # keep the field inside the raster (coarse preview rasters, small tiles)
     r0 = int(min(max(0, r0), max(0, ny - h)))
     c0 = int(min(max(0, c0), max(0, nx - w)))
+    if lat.shape != "square":
+        # the hexagon narrows towards its bottom edge: move the field up until it and its
+        # flattened border lie completely inside the outline, so no letter is cut off
+        def inside(r: int) -> bool:
+            box = result.mask[max(0, r - pad):r + h + pad, max(0, c0 - pad):c0 + w + pad]
+            return bool(box.size and box.all())
+        while r0 > 0 and not inside(r0):
+            r0 -= 1
     h, w = min(h, ny - r0), min(w, nx - c0)
     letters = letters[:h, :w]
-    pad = int(round(2.0 / px))
     blend = int(round(3.0 / px))
     zone = np.zeros((ny, nx), dtype=bool)
     zone[max(0, r0 - pad):r0 + h + pad, max(0, c0 - pad):c0 + w + pad] = True
@@ -429,7 +439,7 @@ def stamp_front_code(result: TileResult, text: str) -> TileResult:
     front = np.where(result.mask, front, 0.0)
     checks = [c for c in result.checks if c.id != "min_thickness"]
     checks.insert(2, _min_thickness_check(front, result.mask, p))
-    return replace(result, front=front, checks=checks, code=text)
+    return replace(result, front=front, checks=checks, code=text, code_box=(r0, c0, h, w))
 
 
 # -- checks ----------------------------------------------------------------------------------

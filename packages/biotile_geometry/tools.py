@@ -99,6 +99,16 @@ class ToolFrame:
         return [(-half_t * self.s, y_t * self.s), (half_t * self.s, y_t * self.s)]
 
 
+def _front_filled(result: TileResult) -> np.ndarray:
+    """Front with every pixel outside the outline set to the nearest value inside. Sampling at
+    the slanted hexagon edges then never blends in the flat outside, which left spikes along
+    the cut edges of the printed parts."""
+    if result.mask is None or result.mask.all():
+        return result.front
+    idx = ndimage.distance_transform_edt(~result.mask, return_distances=False, return_indices=True)
+    return result.front[tuple(idx)]
+
+
 def _sample_front(result: TileResult, fr: ToolFrame, n_x: int, n_y: int, dx: float,
                   x0: float, y0: float) -> np.ndarray:
     """Front height (fired mm) at matrix node positions (casting coords, mirrored)."""
@@ -115,7 +125,7 @@ def _sample_front(result: TileResult, fr: ToolFrame, n_x: int, n_y: int, dx: flo
     px = result.px_mm
     cols = (xt - off_x) / px - 0.5
     rows = (h + off_y - yt) / px - 0.5
-    return ndimage.map_coordinates(result.front, [rows, cols], order=1, mode="nearest")
+    return ndimage.map_coordinates(_front_filled(result), [rows, cols], order=1, mode="nearest")
 
 
 def build_matrix(result: TileResult, grid_mm: float = C.EXPORT_GRID_MM,

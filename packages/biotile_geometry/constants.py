@@ -15,7 +15,7 @@ from __future__ import annotations
 # Versioning
 # --------------------------------------------------------------------------------------
 # Bump on ANY change that alters generated geometry. Stored on every design.
-PIPELINE_VERSION = "0.3.0"  # 0.2: seam healing · 0.3: lattices (hex), moss nests, front code
+PIPELINE_VERSION = "0.3.1"  # 0.2: seam healing · 0.3: lattices (hex), moss nests, front code · 0.3.1: hex code placement, clean hex edges
 # Mounting interface (hanging points, rim). Bump only if tiles stop being interchangeable.
 INTERFACE_VERSION = "1"
 

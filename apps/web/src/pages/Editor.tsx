@@ -6,6 +6,7 @@ import { api, pollJob, type Config, type Design, type Job, type Preview, type Ti
 import ReliefViewer from "../components/ReliefViewer";
 import { Senyera } from "./Gaudi";
 import { ArrowRight, DownloadIcon, ErrorNote, Loading, orbForStep, Pills, ProgressLine, ReadyList, RowLink, Slider, Toggle } from "../components/ui";
+import RotatingFacts from "../components/RotatingFacts";
 import { useLocalized } from "../localized";
 
 type Updates = Partial<Omit<TileParams, "functional">> & { functional?: Partial<TileParams["functional"]> };
@@ -112,7 +113,7 @@ export default function Editor({ config }: { config: Config | null }) {
               <>
                 <ProgressLine value={genJob?.progress ?? 3} />
                 <div className="text-sm opacity-70">{genJob?.step ? t(`progress.steps.${genJob.step}`, { defaultValue: genJob.step }) : t("common.loading")}</div>
-                <p className="text-sm opacity-50">{t("progress.text")}</p>
+                <RotatingFacts />
                 {genJob?.simulated && <p className="border-l-2 border-fg/40 pl-3 text-sm opacity-70">{t("app.demo_fallback")}</p>}
               </>
             )}
